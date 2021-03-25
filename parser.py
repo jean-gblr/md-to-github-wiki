@@ -18,6 +18,12 @@ class DividePages(object):
         for x in sys.argv:
             self.args.append(x)
 
+        #check if number of args = 3 else stop script
+        if(len(self.args) != 3):
+            print('\n/!\\ You need two arguments. /!\\')
+            print('python3 .\\parser.py [yourfile.md] [outputpath]\n')
+            sys.exit()
+
         #ouverture du fichier
         self.file_name = self.args[1]
         #lire tout le fichier
