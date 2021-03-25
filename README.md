@@ -12,7 +12,7 @@ We used it on a generated md file that was converted by [vsxmd](https://github.c
 
 ### Entry file
 documentation.md is the md file converted by vsxmd.
-output_path is your path where will be generated all pages
+output_path is the directory where the files will be generated
 
 ### Output
 A folder containing all files to upload to your github.wiki
