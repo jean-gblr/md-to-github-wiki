@@ -8,10 +8,11 @@ We used it on a generated md file that was converted by [vsxmd](https://github.c
 ## Getting started
 
 ### Usage
-> python3 .\parser.py documentation.md
+> python3 .\parser.py [documentation.md] [output_path]
 
 ### Entry file
 documentation.md is the md file converted by vsxmd.
+output_path is the directory where the files will be generated
 
 ### Output
 A folder containing all files to upload to your github.wiki
