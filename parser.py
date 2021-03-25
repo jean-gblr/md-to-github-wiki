@@ -36,22 +36,19 @@ class DividePages(object):
         file.close()
 
     def parse_and_fill_chunks(self):
-        regex_toc_line = "- \[(.*)\]\(#(T-.*) .*\)"
-        regex_toc_content = "<a name='.*>([^*]+?)<a name"
-        #init le parseur regex
-        regex_parser = re.compile(regex_toc_line)
-        #find les lignes avec name et #T
-        res = regex_parser.findall(self.file_content)
-        regex_parser = re.compile(regex_toc_content)
 
-        self.toc_content = regex_parser.search(self.file_content).group(1)
+        regex_toc_line = "- \[(.*)\]\(#(T-.*) .*\)"
+        regex_toc_content = "<a name='.*>([^€]+?)<a name"
+        #init le parseur regex
+        #find les lignes avec name et #T
+        res = re.findall(regex_toc_line, self.file_content)
+        self.toc_content = re.search(regex_toc_content, self.file_content).group(1)
         #creer les mdchunks
         for item in res:
             #creation des mdchunk avec page_name
-            regex_content = "(<a name='" + item[1] + ".*</a>[^*]+?)<a name='T"
-            regex_parser = re.compile(regex_content)
-
-            content = regex_parser.search(self.file_content)
+            regex_content = "(<a name='" + item[1] + ".*<\/a>[^€]+?)<a name='T"
+            
+            content = re.search(regex_content, str(self.file_content), re.MULTILINE)
             if content is not None:
                 self.md_chunk_list.append(MdChunk(item[0], item[1], content.group(1)))
 
