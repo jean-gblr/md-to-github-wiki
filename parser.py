@@ -12,9 +12,20 @@ class DividePages(object):
     def __init__(self):
         #creation de la liste de chunk
         self.md_chunk_list = []
+        self.args = []
+
+        #recuperation des arguments
+        for x in sys.argv:
+            self.args.append(x)
+
+        #check if number of args = 3 else stop script
+        if(len(self.args) != 3):
+            print('\n/!\\ You need two arguments. /!\\')
+            print('python3 .\\parser.py [yourfile.md] [outputpath]\n')
+            sys.exit()
 
         #ouverture du fichier
-        self.file_name = str(sys.argv.pop(1))
+        self.file_name = self.args[1]
         #lire tout le fichier
         file = open(self.file_name, mode='r')
         content = file.read()
@@ -41,7 +52,7 @@ class DividePages(object):
                 self.md_chunk_list.append(MdChunk(item[0], item[1], content.group(1)))
 
     def write_files(self):
-        directory = "../../../explorer-uwp.wiki/"
+        directory = '{}\\'.format(self.args[2])
         for chunk in self.md_chunk_list:
             filename = directory + chunk.page_name + ".md"
             os.makedirs(os.path.dirname(filename), exist_ok=True)
