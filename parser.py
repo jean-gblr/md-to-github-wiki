@@ -12,6 +12,7 @@ class DividePages(object):
     def __init__(self):
         #creation de la liste de chunk
         self.md_chunk_list = []
+        self.toc_content = ""
         self.args = []
 
         #recuperation des arguments
@@ -33,14 +34,17 @@ class DividePages(object):
         #self.file_content = content.split('\n')
         # close the file
         file.close()
-   
+
     def parse_and_fill_chunks(self):
         regex_toc_line = "- \[(.*)\]\(#(T-.*) .*\)"
-
+        regex_toc_content = "<a name='.*>([^*]+?)<a name"
         #init le parseur regex
         regex_parser = re.compile(regex_toc_line)
         #find les lignes avec name et #T
         res = regex_parser.findall(self.file_content)
+        regex_parser = re.compile(regex_toc_content)
+
+        self.toc_content = regex_parser.search(self.file_content).group(1)
         #creer les mdchunks
         for item in res:
             #creation des mdchunk avec page_name
@@ -53,12 +57,16 @@ class DividePages(object):
 
     def write_files(self):
         directory = '{}\\'.format(self.args[2])
+        home_file_name = directory + "Home.md"
+        os.makedirs(os.path.dirname(home_file_name), exist_ok=True)
+        with open(home_file_name, "w") as f:
+            f.write(self.toc_content)
         for chunk in self.md_chunk_list:
             filename = directory + chunk.page_name + ".md"
             os.makedirs(os.path.dirname(filename), exist_ok=True)
             with open(filename, "w") as f:
                 f.write(chunk.page_content)
-    
+
     def test(self):
         print(self.file_content)
 
