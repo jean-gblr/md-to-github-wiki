@@ -77,7 +77,6 @@ class DividePages(object):
                         line = line[ : pos_int] + link + line[pos_int : ]
             new_toc_content += line + '\n'
         self.toc_content = new_toc_content
-        print(self.toc_content)
     
     def write_files(self):
         directory = '{}\\'.format(self.args[2])
