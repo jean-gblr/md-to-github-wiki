@@ -2,6 +2,10 @@ import re
 import sys
 import os
 
+regex_toc_line = "- \[(.*)\]\(#(T-.*) .*\)"
+regex_toc_content = "<a name='.*>([^€]+?)<a name"
+regex_toc_link = "\#T.*'"
+
 class MdChunk():
     def __init__(self, page_name, page_tag, page_content):
         self.page_name = page_name
@@ -36,24 +40,11 @@ class DividePages(object):
         file.close()
 
     def parse_and_fill_chunks(self):
-
-        regex_toc_line = "- \[(.*)\]\(#(T-.*) .*\)"
-        regex_toc_link = "\#T.*\ "
-        regex_toc_content = "<a name='.*>([^€]+?)<a name"
         #init le parseur regex
         #find les lignes avec name et #T
-        res_link = re.findall(regex_toc_line, self.file_content)
         res = re.findall(regex_toc_line, self.file_content)
         toc_content = re.search(regex_toc_content, self.file_content).group(1)
-
-        for item in res_link:
-            uri = self.args[3]
-            link = item[0]
-            link = uri + link + '/ '
-            test_after = re.sub(regex_toc_link, link, toc_content)
         
-        self.toc_content = test_after
-
         for item in res:
             #creation des mdchunk avec page_name
             regex_content = "(<a name='" + item[1] + ".*<\/a>[^€]+?)<a name='T"
@@ -61,6 +52,14 @@ class DividePages(object):
             content = re.search(regex_content, str(self.file_content), re.MULTILINE)
             if content is not None:
                 self.md_chunk_list.append(MdChunk(item[0], item[1], content.group(1)))
+
+    def rewrite_links(self):
+        toc_lines = re.findall(regex_toc_line, self.file_content)
+        for item in toc_lines:
+            uri = self.args[3]
+            link = uri + item[0] + '/ '
+            test_after = re.sub(regex_toc_link, link, self.toc_content)
+        
 
     def write_files(self):
         directory = '{}\\'.format(self.args[2])
@@ -88,6 +87,7 @@ class DividePages(object):
 exec = DividePages()
 #exec.test()
 exec.parse_and_fill_chunks()
+exec.rewrite_links()
 #exec.test_chunk_name()
 #exec.test_chunk_content()
 exec.write_files()
