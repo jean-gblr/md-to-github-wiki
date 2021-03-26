@@ -20,7 +20,7 @@ class DividePages(object):
             self.args.append(x)
 
         #check if number of args = 3 else stop script
-        if(len(self.args) != 3):
+        if(len(self.args) != 4):
             print('\n/!\\ You need two arguments. /!\\')
             print('python3 .\\parser.py [yourfile.md] [outputpath]\n')
             sys.exit()
@@ -38,12 +38,22 @@ class DividePages(object):
     def parse_and_fill_chunks(self):
 
         regex_toc_line = "- \[(.*)\]\(#(T-.*) .*\)"
+        regex_toc_link = "\#T.*\ "
         regex_toc_content = "<a name='.*>([^€]+?)<a name"
         #init le parseur regex
         #find les lignes avec name et #T
+        res_link = re.findall(regex_toc_line, self.file_content)
         res = re.findall(regex_toc_line, self.file_content)
-        self.toc_content = re.search(regex_toc_content, self.file_content).group(1)
-        #creer les mdchunks
+        toc_content = re.search(regex_toc_content, self.file_content).group(1)
+
+        for item in res_link:
+            uri = self.args[3]
+            link = item[0]
+            link = uri + link + '/ '
+            test_after = re.sub(regex_toc_link, link, toc_content)
+        
+        self.toc_content = test_after
+
         for item in res:
             #creation des mdchunk avec page_name
             regex_content = "(<a name='" + item[1] + ".*<\/a>[^€]+?)<a name='T"
