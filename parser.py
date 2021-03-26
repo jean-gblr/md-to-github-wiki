@@ -26,7 +26,8 @@ class DividePages(object):
         #check if number of args = 3 else stop script
         if(len(self.args) != 4):
             print('\n/!\\ You need two arguments. /!\\')
-            print('python3 .\\parser.py [yourfile.md] [outputpath]\n')
+            print('python3 .\\parser.py [yourfile.md] [outputpath] [github_wiki_link]\n')
+            print('Exemple : python3 .\\parser.py .\\File.md c:\\Users\\Jean\\Documents\\md-to-github-wiki.wiki https://github.com/jean/md-to-github-wiki/wiki/')
             sys.exit()
 
         #ouverture du fichier
